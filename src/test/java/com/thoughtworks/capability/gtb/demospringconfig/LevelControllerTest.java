@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 
@@ -17,28 +17,41 @@ class LevelControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private LevelController levelController;
-
     @Test
-    public void shouldGetBasicLevelWhenLevelNumberIsLessOne() throws Exception {
+    public void should_return_basic_when_level_number_less_1() throws Exception {
         String result = mockMvc.perform(get("/level")).andReturn().getResponse().getContentAsString();
         assertEquals(result, "basic");
     }
 
-    @Test
-    public void should_get_advanced_when_level_number_is_1() throws Exception {
+}
 
-        ReflectionTestUtils.setField(levelController, "levelNumber", 1);
+@TestPropertySource(properties = {"levelNumber=3"})
+@SpringBootTest
+@AutoConfigureMockMvc
+class LevelIs3Test {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    public void should_return_advanced_when_level_is_1() throws Exception {
+        String result = mockMvc.perform(get("/level")).andReturn().getResponse().getContentAsString();
+        assertEquals(result, "advanced");
+    }
+}
+
+@TestPropertySource(properties = {"levelNumber=1"})
+@SpringBootTest
+@AutoConfigureMockMvc
+class LevelIs1Test {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    public void should_return_advanced_when_level_is_1() throws Exception {
         String result = mockMvc.perform(get("/level")).andReturn().getResponse().getContentAsString();
         assertEquals(result, "advanced");
     }
 
-    @Test
-    public void should_get_advanced_when_level_number_more_than_1() throws Exception {
-
-        ReflectionTestUtils.setField(levelController, "levelNumber", 5);
-        String result = mockMvc.perform(get("/level")).andReturn().getResponse().getContentAsString();
-        assertEquals(result, "advanced");
-    }
 }
