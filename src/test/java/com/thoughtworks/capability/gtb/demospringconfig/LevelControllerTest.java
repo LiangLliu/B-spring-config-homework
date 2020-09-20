@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 
@@ -25,22 +25,7 @@ class LevelControllerTest {
 
 }
 
-@TestPropertySource(properties = {"levelNumber=3"})
-@SpringBootTest
-@AutoConfigureMockMvc
-class LevelIs3Test {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Test
-    public void should_return_advanced_when_level_is_1() throws Exception {
-        String result = mockMvc.perform(get("/level")).andReturn().getResponse().getContentAsString();
-        assertEquals(result, "advanced");
-    }
-}
-
-@TestPropertySource(properties = {"levelNumber=1"})
+@ActiveProfiles("11")
 @SpringBootTest
 @AutoConfigureMockMvc
 class LevelIs1Test {
@@ -50,6 +35,23 @@ class LevelIs1Test {
 
     @Test
     public void should_return_advanced_when_level_is_1() throws Exception {
+        String result = mockMvc.perform(get("/level")).andReturn().getResponse().getContentAsString();
+        assertEquals(result, "advanced");
+    }
+
+}
+
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("l5")
+class LevelIs5Test {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    public void should_return_advanced_when_level_is_more_than_1() throws Exception {
         String result = mockMvc.perform(get("/level")).andReturn().getResponse().getContentAsString();
         assertEquals(result, "advanced");
     }
